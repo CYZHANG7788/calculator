@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>富氧离子房收益计算器</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 20px auto; padding: 20px }
+        .input-group { margin-bottom: 15px }
+        label { display: inline-block; width: 120px }
+        input { width: 150px; padding: 5px }
+        .result { background: #f5f5f5; padding: 15px; margin-top: 20px }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px }
+        td, th { padding: 8px; border: 1px solid #ddd; text-align: left }
+    </style>
+</head>
+<body>
+    <h2>富氧离子房收益计算器</h2>
+    
+    <div class="input-group">
+        <label>房间数量（间）:</label>
+        <input type="number" id="roomCount" min="0">
+    </div>
+    
+    <div class="input-group">
+        <label>原房价（元）:</label>
+        <input type="number" id="originalPrice" min="0">
+    </div>
+    
+    <div class="input-group">
+        <label>溢价率（%）:</label>
+        <input type="number" id="premiumRate" step="0.1" min="0">
+    </div>
+    
+    <div class="input-group">
+        <label>出租率（%）:</label>
+        <input type="number" id="occupancyRate" step="0.1" min="0" max="100">
+    </div>
+    
+    <button onclick="calculate()">开始计算</button>
+
+    <div class="result">
+        <h3>计算结果</h3>
+        <p>溢后房价：<span id="premiumPrice">0</span> 元</p>
+        
+        <table>
+            <tr>
+                <th>项目</th>
+                <th>方案A</th>
+                <th>方案B</th>
+            </tr>
+            <tr>
+                <td>每日成本</td>
+                <td id="costA">0 元</td>
+                <td id="costB">0 元</td>
+            </tr>
+            <tr>
+                <td>溢价收入</td>
+                <td colspan="2" id="premiumIncome">0 元</td>
+            </tr>
+            <tr>
+                <td>每日净利润</td>
+                <td id="profitA">0 元</td>
+                <td id="profitB">0 元</td>
+            </tr>
+            <tr>
+                <td>年总利润</td>
+                <td id="annualA">0 元</td>
+                <td id="annualB">0 元</td>
+            </tr>
+            <tr>
+                <td>3年总利润</td>
+                <td id="threeYearA">0 元</td>
+                <td id="threeYearB">0 元</td>
+            </tr>
+        </table>
+    </div>
+
+    <script>
+        function calculate() {
+            // 获取输入值
+            const roomCount = parseFloat(document.getElementById('roomCount').value) || 0;
+            const originalPrice = parseFloat(document.getElementById('originalPrice').value) || 0;
+            const premiumRate = (parseFloat(document.getElementById('premiumRate').value) || 0) / 100;
+            const occupancyRate = (parseFloat(document.getElementById('occupancyRate').value) || 0) / 100;
+
+            // 计算基础值
+            const premiumPrice = originalPrice * (1 + premiumRate);
+            const premiumIncome = originalPrice * premiumRate * roomCount * occupancyRate;
+
+            // 方案A计算
+            const costA = roomCount * 16;
+            const profitA = premiumIncome - costA;
+
+            // 方案B计算
+            const costB = roomCount * occupancyRate * 30;
+            const profitB = premiumIncome - costB;
+
+            // 更新显示结果
+            document.getElementById('premiumPrice').textContent = premiumPrice.toFixed(2);
+            document.getElementById('costA').textContent = costA.toFixed(2);
+            document.getElementById('costB').textContent = costB.toFixed(2);
+            document.getElementById('premiumIncome').textContent = premiumIncome.toFixed(2);
+            
+            document.getElementById('profitA').textContent = profitA.toFixed(2);
+            document.getElementById('profitB').textContent = profitB.toFixed(2);
+            
+            document.getElementById('annualA').textContent = (profitA * 365).toFixed(2);
+            document.getElementById('annualB').textContent = (profitB * 365).toFixed(2);
+            
+            document.getElementById('threeYearA').textContent = (profitA * 365 * 3).toFixed(2);
+            document.getElementById('threeYearB').textContent = (profitB * 365 * 3).toFixed(2);
+        }
+    </script>
+</body>
+</html>
